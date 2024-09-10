@@ -19,7 +19,7 @@ public class Blog {
         this.id = id;
         this.category = category;
         this.title = title;
-        this.cover = cover;
+        this.cover = "https://picsum.photos/200/300";
         this.content = content;
         this.timeOfLecture = timeOfLecture;
     }

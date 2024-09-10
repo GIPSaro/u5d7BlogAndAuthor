@@ -5,6 +5,7 @@ import giorgiaipsarop.u5d7BlogAndAuthor.exceptions.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -17,7 +18,10 @@ public class AuthorService {
     public List<Author> getUsers() {
         return this.authors;
     }
-
+    public String getFormattedAuthorDateOfBirth(Author author) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return author.getDateOfBirth().format(formatter);
+    }
     public Author save(Author author) {
         Random random = new Random();
         author.setId(random.nextInt(1, 100));
