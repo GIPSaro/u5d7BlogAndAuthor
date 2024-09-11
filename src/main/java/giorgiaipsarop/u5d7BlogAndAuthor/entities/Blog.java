@@ -1,26 +1,34 @@
 package giorgiaipsarop.u5d7BlogAndAuthor.entities;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Getter
 @Setter
 @ToString
+@Entity
+@Table(name="blogs")
+@NoArgsConstructor
 public class Blog {
+    @Id
+    @Setter(AccessLevel.NONE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private int id;
     private String category;
     private String title;
     private String cover;
     private String content;
     private int timeOfLecture;
+    @ManyToOne
+    @JoinColumn(name = "authorId")
+    private Author author;
 
-    public Blog(int id, String category, String title, String cover, String content, int timeOfLecture) {
-        this.id = id;
+    public Blog(String category, String title, String cover, String content, int timeOfLecture) {
         this.category = category;
         this.title = title;
-        this.cover = "https://picsum.photos/200/300";
+        this.cover = cover;
         this.content = content;
         this.timeOfLecture = timeOfLecture;
     }
-}
+    }

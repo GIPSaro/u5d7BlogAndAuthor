@@ -1,8 +1,11 @@
 package giorgiaipsarop.u5d7BlogAndAuthor.controllers;
 
+import giorgiaipsarop.u5d7BlogAndAuthor.entities.Author;
 import giorgiaipsarop.u5d7BlogAndAuthor.entities.Blog;
+import giorgiaipsarop.u5d7BlogAndAuthor.payloads.BlogPayload;
 import giorgiaipsarop.u5d7BlogAndAuthor.services.BlogService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,13 +19,15 @@ public class BlogController {
     @Autowired
     private BlogService blogService;
     @GetMapping
-    public List<Blog> getAllUsers() {
-        return this.blogService.getUsers();
+    public Page<Blog> getAllBlogs(@RequestParam(defaultValue = "0") int page,
+                                  @RequestParam(defaultValue = "10") int size,
+                                  @RequestParam(defaultValue = "id") String orderBy) {
+        return this.blogService.getBlogs(page, size, orderBy);
     }
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED) // Status Code 201
-    public Blog save(@RequestBody Blog blog) {
-        return this.blogService.save(blog);
+    public Blog save(@RequestBody BlogPayload blogPayload) {
+        return this.blogService.save(blogPayload);
     }
     @GetMapping("/{id}")
     public Blog findById(@PathVariable int id) {
@@ -34,8 +39,8 @@ public class BlogController {
     }
 
     @DeleteMapping("/{id}")
-//    @ResponseStatus(HttpStatus.NO_CONTENT) // Status Code 204
-    public String findByIdAndDelete(@PathVariable int id) {
-        return this.blogService.findByIdAndDelete(id) ? "Elemento rimosso" : "Elemento non trovato";
+    @ResponseStatus(HttpStatus.NO_CONTENT) // Status Code 204
+    public void findByIdAndDelete(@PathVariable int id) {
+        this.blogService.findByIdAndDelete(id);
     }
 }

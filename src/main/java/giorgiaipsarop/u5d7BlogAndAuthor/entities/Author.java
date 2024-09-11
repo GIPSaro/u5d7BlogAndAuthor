@@ -1,15 +1,21 @@
 package giorgiaipsarop.u5d7BlogAndAuthor.entities;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDate;
-
 @Getter
 @Setter
 @ToString
+@Entity
+@Table(name = "authors")
+@NoArgsConstructor
+
 public class Author {
+    @Id
+    @Setter(AccessLevel.NONE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private int id;
     private String name;
     private String surname;
@@ -17,12 +23,12 @@ public class Author {
     private LocalDate dateOfBirth;
     private String avatar;
 
-    public Author(int id, String name, String surname, String email, LocalDate dateOfBirth, String avatar) {
-        this.id = id;
+    public Author(String name, String surname, String email, LocalDate dateOfBirth, String avatar){
+
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.dateOfBirth = dateOfBirth;
-        this.avatar = "https://ui-avatars.com/api/?name=" + name + "+" + surname;
+        this.avatar = avatar;
     }
 }
