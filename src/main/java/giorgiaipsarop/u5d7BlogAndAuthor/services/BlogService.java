@@ -21,7 +21,6 @@ import java.io.IOException;
 
 
 @Service
-@Slf4j
 public class BlogService {
     @Autowired
     private BlogsRepository blogsRepository;
@@ -39,14 +38,11 @@ public class BlogService {
     public Blog save(NewBlogDTO newBlogPayload) {
         //LOGICA PAYLOAD
         blogsRepository.findByTitle(newBlogPayload.title()).ifPresent(blog -> {
-
-            throw new BadRequestException("Il blogpost " + newBlogPayload.title() + " esiste già!");
-
+            throw new BadRequestException("Il blogpost '" + newBlogPayload.title() + "' esiste già!");
         });
         Blog blog = new Blog(
                 newBlogPayload.category(),
                 newBlogPayload.title(),
-                newBlogPayload.cover(),
                 newBlogPayload.content(),
                 newBlogPayload.timeOfLecture()
         );
@@ -58,12 +54,10 @@ public class BlogService {
         return blogsRepository.findById(blogId).orElseThrow(() -> new NotFoundException(blogId));
     }
 
-
     public Blog findByIdAndUpdate(int blogId, NewBlogDTO updatedBlog) {
         Blog found = this.findById(blogId);
         found.setCategory(updatedBlog.category());
         found.setTitle(updatedBlog.title());
-        found.setCover(updatedBlog.cover());
         found.setContent(updatedBlog.content());
         found.setTimeOfLecture(updatedBlog.timeOfLecture());
         found.setAuthor(authorService.findById(updatedBlog.authorId()));
@@ -74,6 +68,7 @@ public class BlogService {
         Blog found = this.findById(blogId);
         blogsRepository.delete(found);
     }
+
     public String uploadImageAndGetUrl(MultipartFile cover, int blogId) throws IOException {
         String urlCover = (String) cloudinaryUploader.uploader().upload(cover.getBytes(), ObjectUtils.emptyMap()).get("url");
         Blog found = findById(blogId);
@@ -81,5 +76,4 @@ public class BlogService {
         blogsRepository.save(found);
         return urlCover;
     }
-    }
-
+}

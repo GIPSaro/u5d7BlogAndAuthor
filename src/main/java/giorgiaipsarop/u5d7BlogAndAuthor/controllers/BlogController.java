@@ -40,12 +40,15 @@ public class BlogController {
     }
 
     //Aggiorniamo l'immagine con questo endpoint
-    @PatchMapping("/{id}/uploadCover")
-    @ResponseStatus(HttpStatus.OK) // Status Code 200
-    public String uploadCover(@PathVariable int id, @RequestParam("cover") MultipartFile image) throws IOException {
-        return this.blogService.uploadImageAndGetUrl(image, id);
-    }
+    @PostMapping("/{id}/uploadCover")
+    @ResponseStatus(HttpStatus.OK)
+    public void uploadCover(@RequestParam("cover") MultipartFile image) {
+        System.out.println(image.getOriginalFilename());
 
+
+//        return this.blogService.uploadImageAndGetUrl(image);
+
+    }
     @GetMapping("/{id}")
     public Blog findById(@PathVariable int id) {
         return this.blogService.findById(id);

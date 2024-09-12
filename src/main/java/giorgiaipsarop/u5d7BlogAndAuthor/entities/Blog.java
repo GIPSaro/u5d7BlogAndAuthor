@@ -7,7 +7,7 @@ import lombok.*;
 @Setter
 @ToString
 @Entity
-@Table(name="blogs")
+@Table(name = "blogs")
 @NoArgsConstructor
 public class Blog {
     @Id
@@ -21,14 +21,14 @@ public class Blog {
     private String content;
     private int timeOfLecture;
     @ManyToOne
-    @JoinColumn(name = "authorId")
+    @JoinColumn(name = "author_id")
     private Author author;
 
-    public Blog(String category, String title, String cover, String content, int timeOfLecture) {
+    public Blog(String category, String title, String content, int timeOfLecture) {
         this.category = category;
         this.title = title;
-        this.cover = cover;
+        this.cover = "https://picsum.photos/200/300";
         this.content = content;
         this.timeOfLecture = timeOfLecture;
     }
-    }
+}
