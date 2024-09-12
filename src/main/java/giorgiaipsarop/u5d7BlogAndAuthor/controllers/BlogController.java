@@ -2,13 +2,19 @@ package giorgiaipsarop.u5d7BlogAndAuthor.controllers;
 
 import giorgiaipsarop.u5d7BlogAndAuthor.entities.Author;
 import giorgiaipsarop.u5d7BlogAndAuthor.entities.Blog;
+import giorgiaipsarop.u5d7BlogAndAuthor.exceptions.BadRequestException;
 import giorgiaipsarop.u5d7BlogAndAuthor.payloads.BlogPayload;
+import giorgiaipsarop.u5d7BlogAndAuthor.payloads.NewBlogDTO;
 import giorgiaipsarop.u5d7BlogAndAuthor.services.BlogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -18,6 +24,9 @@ public class BlogController {
 
     @Autowired
     private BlogService blogService;
+    @Autowired
+    private NewBlogDTO newBlogDTO;
+
     @GetMapping
     public Page<Blog> getAllBlogs(@RequestParam(defaultValue = "0") int page,
                                   @RequestParam(defaultValue = "10") int size,
@@ -26,15 +35,25 @@ public class BlogController {
     }
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED) // Status Code 201
-    public Blog save(@RequestBody BlogPayload blogPayload) {
-        return this.blogService.save(blogPayload);
+    public Blog save(@RequestBody @Validated NewBlogDTO newBlogDTO, BindingResult validation) {
+        if (validation.hasErrors()) {
+            throw new BadRequestException(validation.getAllErrors());
+        }
+        return this.blogService.save(newBlogDTO);
+    }
+
+    //Aggiorniamo l'immagine con questo endpoint
+    @PatchMapping("/{id}/uploadCover")
+    @ResponseStatus(HttpStatus.OK) // Status Code 200
+    public String uploadCover(@PathVariable int id, @RequestParam("cover") MultipartFile image) throws IOException {
+        return this.blogService.uploadImageAndGetUrl(image, id);
     }
     @GetMapping("/{id}")
     public Blog findById(@PathVariable int id) {
         return this.blogService.findById(id);
     }
     @PutMapping("/{id}")
-    public Blog findByIdAndUpdate(@PathVariable int id, @RequestBody Blog updatedBlog) {
+    public Blog findByIdAndUpdate(@PathVariable int id, @RequestBody NewBlogDTO updatedBlog) {
         return this.blogService.findByIdAndUpdate(id, updatedBlog);
     }
 
